@@ -58,7 +58,7 @@ const PostsScreen = ({navigation}) => {
           data={posts}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View>
+            <View style={styles.posts_container}>
               <Image
                 source={{ uri: item.photo }}
                 style={{ width: 343, height: 240, marginTop: 32 }}
@@ -94,6 +94,10 @@ const PostsScreen = ({navigation}) => {
 export default PostsScreen;
 
 const styles = StyleSheet.create({
+  posts_container: {
+    marginHorizontal: 8, 
+   justifyContent: "center",
+  },
   posts: {
     fontFamily: "Roboto",
     fontStyle: "normal",
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "center",
+    
     backgroundColor: "#E5E5E5",
   },
   logout: {
@@ -121,6 +125,7 @@ const styles = StyleSheet.create({
   postDetails: {
     marginTop: 8,
     display: "flex",
+    flexDirection: "row",
   },
   description: {
     marginTop: 8,
@@ -150,5 +155,6 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     borderColor: "#000000",
     marginLeft: 6,
+    marginRight: 50,
   },
 });
