@@ -1,14 +1,34 @@
 import { useState, useEffect } from "react";
-import { Text, StyleSheet, SafeAreaView, FlatList, View, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Text, StyleSheet, SafeAreaView, FlatList, View, Image, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import * as Location from "expo-location";
+import { db } from "../../../firebase/config";
+import { collection, onSnapshot } from "firebase/firestore";
 
-const USER_POSTS = [];
+import { signOutUser } from "../../../redux/auth/auth-operations";
 
 const PostsScreen = ({navigation}) => {
-  const [posts, setPosts] = useState(USER_POSTS);
+  const [posts, setPosts] = useState([]);
   const [location, setLocation] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const signOut = () => {
+    dispatch(signOutUser());
+  };
+  
+  const getAllPosts = async () => {
+    await onSnapshot(collection(db, "posts"), (snapshots) => {
+      setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+  };
+
+  useEffect(() => {
+    getAllPosts();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -32,7 +52,7 @@ const PostsScreen = ({navigation}) => {
           <Text style={styles.posts}>Your posts page</Text>
           <TouchableOpacity
             style={styles.logout_button}
-            onPress={() => navigation.navigate("Login")}
+            onPress={signOut}
           >
             <MaterialIcons name="logout" size={24} color="#BDBDBD" />
           </TouchableOpacity>
