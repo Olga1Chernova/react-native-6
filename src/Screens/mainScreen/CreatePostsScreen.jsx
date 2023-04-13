@@ -173,15 +173,15 @@ const CreatePostsScreen = ({ navigation }) => {
           <TextInput
             placeholder="Enter post location"
             style={styles.input}
-            value={location}
+            value={locationName}
             onFocus={() => {
               setIsKeyboardShown(true);
-              setIsFocus({ ...isFocus, location: true });
+              setIsFocus({ ...isFocus, locationName: true });
             }}
             onBlur={() => {
               setIsKeyboardShown(false);
               Keyboard.dismiss();
-              setIsFocus({ ...isFocus, location: false });
+              setIsFocus({ ...isFocus, locationName: false });
             }}
             onChangeText={(value) => setLocationName(value)}
           />
