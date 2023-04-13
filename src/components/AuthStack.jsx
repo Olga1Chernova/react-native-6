@@ -1,25 +1,20 @@
-import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useRoute } from "./routing";
+import { authIsLoggedIn } from "../../redux/auth/auth-operations";
 
-import RegistrationScreen from "../../src/Screens/auth/RegistrationScreen";
-import LoginScreen from "../../src/Screens/auth/LoginScreen";
-import Home from "../../src/Screens/mainScreen/Home";
+const AuthStack = () => {
+  const dispatch = useDispatch();
 
-const { Navigator, Screen } = createStackNavigator();
+  const { isLoggedIn } = useSelector(state => state.auth);
 
-const AuthStack = () => (
-  <Navigator screenOptions={{ headerShown: false }}>
-    <Screen
-      name="Registration"
-      component={RegistrationScreen}
-    />
-    <Screen
-      name="Login"
-      component={LoginScreen}
-    />
-    <Screen
-      name="Home"
-      component={Home}
-    />
-  </Navigator>
-);
+  useEffect(() => {
+    dispatch(authIsLoggedIn());
+  }, [])
+
+  const routing = useRoute(isLoggedIn);
+
+  return <NavigationContainer>{routing}</NavigationContainer>;
+};
 export default AuthStack;

@@ -1,9 +1,11 @@
-import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { useCallback } from 'react';
 import { View } from 'react-native';
 import * as SplashScreen from "expo-splash-screen";
 import AuthStack from './src/components/AuthStack';
+
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 export default function App() {
 
@@ -22,11 +24,11 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <View style={{flex:1}} onLayout={onLayoutRootView}>
-        <AuthStack />
-      </View>
-    </NavigationContainer>
+    <Provider store={store}>
+        <View style={{flex:1}} onLayout={onLayoutRootView}>
+          <AuthStack />
+        </View>
+    </Provider>
   );
 }
 
