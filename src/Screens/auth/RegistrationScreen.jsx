@@ -14,6 +14,8 @@ import {
   Dimensions,
 } from "react-native";
 
+import { useDispatch } from "react-redux";
+import { signUp } from "../../../redux/auth/auth-operations";
 
 const InitialState = {
   login: "",
@@ -30,26 +32,18 @@ const RegistrationScreen = ({ navigation }) => {
     Dimensions.get("window").width - 16 * 2
   );
 
-  const validateInput = () => {
-  if (!state.login.trim()) {
-    alert("Please enter your login");
-    return false;
-  }
-  if (!state.email.trim() || !state.email.includes("@")) {
-    alert("Please enter a valid email address");
-    return false;
-  }
-  if (state.password.trim().length < 6) {
-    alert("Please enter a password with at least 6 characters");
-    return false;
-  }
-  return true;
-}
+  const dispatch = useDispatch();
 
   const keyboardHide = () => {
+    Keyboard.dismiss();
+    setIsKeyboardShown(false);
+  }
+
+  const handleSubmit = () => {
     setIsKeyboardShown(false);
     Keyboard.dismiss();
     console.log(state);
+    dispatch(signUp(state))
     setState(InitialState);
   };
 
@@ -121,10 +115,8 @@ const RegistrationScreen = ({ navigation }) => {
                   style={styles.button}
                   activeOpacity={0.8}
                   onPress={() => {
-                    keyboardHide();
-                    if (validateInput()) {
-                      navigation.navigate("Home");
-                    }
+                    handleSubmit();
+                    setState({email: "", password: "", login:""})
                 }}
                 >
                   <Text style={styles.buttonTitle}>Sign up</Text>
