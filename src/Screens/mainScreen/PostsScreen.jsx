@@ -50,10 +50,7 @@ const PostsScreen = ({navigation}) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.logout}>
           <Text style={styles.posts}>Your posts page</Text>
-          <TouchableOpacity
-            style={styles.logout_button}
-            onPress={signOut}
-          >
+          <TouchableOpacity style={styles.logout_button} onPress={signOut}>
             <MaterialIcons name="logout" size={24} color="#BDBDBD" />
           </TouchableOpacity>
         </View>
@@ -71,12 +68,17 @@ const PostsScreen = ({navigation}) => {
                 <TouchableOpacity
                   onPress={() => navigation.navigate("Comments")}
                 >
-                  <EvilIcons name="comment" size={24} color="black" />;
+                  <EvilIcons name="comment" size={24} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.comments}>0</Text>
                 <TouchableOpacity
                   style={styles.location_button}
-                  onPress={() => navigation.navigate("Map", { location, item })}
+                  onPress={() =>
+                    navigation.navigate("Map", {
+                      location: JSON.stringify(location),
+                      item,
+                    })
+                  }
                 >
                   <EvilIcons name="location" size={24} color="black" />
                 </TouchableOpacity>
