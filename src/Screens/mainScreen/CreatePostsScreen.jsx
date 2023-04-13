@@ -11,8 +11,12 @@ import {
 import { EvilIcons } from "@expo/vector-icons";
 import { Camera } from "expo-camera";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Platform } from "react-native";
 import * as Location from "expo-location";
+import { storage, db } from "../../../firebase/config";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
 import PostsScreen from "./PostsScreen";
 
 const CreatePostsScreen = ({ navigation }) => {
@@ -20,11 +24,14 @@ const CreatePostsScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
+  const [locationName, setLocationName] = useState("");
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [isFocus, setIsFocus] = useState({
     title: false,
     location: false,
   });
+
+   const { userId, login } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
@@ -66,6 +73,39 @@ const CreatePostsScreen = ({ navigation }) => {
     })();
   }, []);
 
+  const uploadPost = async () => {
+    const photo = await uploadPhoto();
+    const createPost = await addDoc(collection(db, "posts"), {
+      photo,
+      title,
+      locationName,
+      location,
+      userId,
+      login,
+    });
+  };
+
+  const uploadPhoto = async () => {
+    try {
+      const response = await fetch(photo);
+      const file = await response.blob();
+
+      const id = Date.now().toString();
+      const storageRef = ref(storage, `postImage/${id}`);
+      await uploadBytes(storageRef, file);
+      const processedPhoto = await getDownloadURL(storageRef);
+      console.log("processedPhoto", processedPhoto);
+      return processedPhoto;
+    } catch (error) {
+      console.log("error", error.message);
+    }
+  }
+
+  const sendPost = () => {
+    uploadPost();
+    navigation.navigate("Posts");
+  };
+
   const takePhoto = async () => {
     if (camera && camera.takePictureAsync) {
       const photo = await camera.takePictureAsync();
@@ -79,7 +119,7 @@ const CreatePostsScreen = ({ navigation }) => {
   };
 
   const reset = () => {
-    setTitle(""), setLocation("");
+    setTitle(""), setLocationName("");
   };
 
   return (
@@ -139,7 +179,7 @@ const CreatePostsScreen = ({ navigation }) => {
               Keyboard.dismiss();
               setIsFocus({ ...isFocus, location: false });
             }}
-            onChangeText={(value) => setLocation(value)}
+            onChangeText={(value) => setLocationName(value)}
           />
         </View>
         <TouchableOpacity
@@ -147,7 +187,7 @@ const CreatePostsScreen = ({ navigation }) => {
           onPress={() => {
             keyboardHide();
             reset();
-            navigation.navigate("Posts", { photo });
+            sendPost();
           }}
         >
           <Text style={styles.post_btn}>Post</Text>
