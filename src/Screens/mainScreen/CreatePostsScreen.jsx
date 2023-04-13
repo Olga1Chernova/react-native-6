@@ -23,12 +23,12 @@ const CreatePostsScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState("");
   const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(null);
   const [locationName, setLocationName] = useState("");
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [isFocus, setIsFocus] = useState({
     title: false,
-    location: false,
+    locationName: false,
   });
 
    const { userId, login } = useSelector((state) => state.auth);
@@ -75,14 +75,18 @@ const CreatePostsScreen = ({ navigation }) => {
 
   const uploadPost = async () => {
     const photo = await uploadPhoto();
-    const createPost = await addDoc(collection(db, "posts"), {
+    const post = {
       photo,
       title,
       locationName,
-      location,
       userId,
       login,
-    });
+    };
+    if (location) {
+      // check if location is not null
+      post.location = location.coords;
+    }
+    const createPost = await addDoc(collection(db, "posts"), post);
   };
 
   const uploadPhoto = async () => {
