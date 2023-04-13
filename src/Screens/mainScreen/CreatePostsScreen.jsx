@@ -82,13 +82,15 @@ const CreatePostsScreen = ({ navigation }) => {
       userId,
       login,
     };
-    if (location) {
-      // check if location is not null
+
+    if (location?.coords) {
       post.location = location.coords;
+      console.log(post.location);
     }
+
     const createPost = await addDoc(collection(db, "posts"), post);
   };
-
+  
   const uploadPhoto = async () => {
     try {
       const response = await fetch(photo);
