@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { registerUser } from "../../../redux/auth/auth-operations";
 import {
   StyleSheet,
   View,
@@ -13,6 +14,10 @@ import {
   Dimensions,
 } from "react-native";
 
+import { useDispatch } from "react-redux";
+
+import { signIn } from "../../../redux/auth/auth-operations";
+
 const InitialState = {
   email: "",
   password: "",
@@ -25,25 +30,20 @@ const LoginScreen = ({ navigation }) => {
     Dimensions.get("window").width - 16 * 2
   );
 
+  const dispatch = useDispatch();
+
   const keyboardHide = () => {
+    Keyboard.dismiss();
+    setIsKeyboardShown(false);
+  };
+
+  const handleSubmit = () => {
     setIsKeyboardShown(false);
     Keyboard.dismiss();
-    console.log(state);
+    console.log("submit", state);
+    dispatch(signIn(state));
     setState(InitialState);
   };
-
-  const validateInput = () => {
-    if (!state.email.trim() || !state.email.includes("@")) {
-      alert("Please enter a valid email address");
-      return false;
-    }
-    if (state.password.trim().length < 6) {
-      alert("Please enter a password with at least 6 characters");
-      return false;
-    }
-    return true;
-  };
-
 
   useEffect(() => {
     const onChange = () => {
@@ -98,10 +98,8 @@ const LoginScreen = ({ navigation }) => {
                   style={styles.button}
                   activeOpacity={0.8}
                   onPress={() => {
-                    keyboardHide();
-                    if (validateInput()) {
-                      navigation.navigate("Home");
-                    }
+                    handleSubmit();
+                    setState({ email: "", password: "", login: "" });
                   }}
                 >
                   <Text style={styles.buttonTitle}>Log in</Text>
