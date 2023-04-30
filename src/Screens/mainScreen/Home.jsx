@@ -1,73 +1,58 @@
-import PostsScreen from "./PostsScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import CreatePostsScreen from "./CreatePostsScreen";
-import ProfileScreen from "./ProfileScreen";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import MapScreen from "../nestedScreens/MapScreen";
+import CommentsScreen from "../nestedScreens/CommentsScreen";
+import PostsScreen from "../nestedScreens/PostsScreen";
 
 import { StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 
-const Tab = createBottomTabNavigator();
-const Home = ({ navigation }) => {
+
+const NestedScreen = createNativeStackNavigator();
+
+const Home = () => {
   return (
-    <Tab.Navigator
-      initialRouteName="Posts"
+    <NestedScreen.Navigator
       screenOptions={{
-        tabBarShowLabel: false,
         tabBarStyle: {
           height: 83,
+          paddingHorizontal: 81,
+        },
+        headerTitleAlign: "center",
+        headerTitleStyle: {
+          fontSize: 17,
+          fontFamily: "Roboto-Medium",
+          lineHeight: 22,
+          color: "#212121",
         },
       }}
     >
-      <Tab.Screen
-        name="Posts"
+      <NestedScreen.Screen
+        options={{
+          headerTitle: "Публікації",
+        }}
+        name="PostsScreen"
         component={PostsScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => (
-            <Feather name="grid" size={24} color="rgba(33,33,33, 0.8)" />
-          ),
-        }}
       />
-      <Tab.Screen
-        name="CreatePosts"
-        component={CreatePostsScreen}
+      <NestedScreen.Screen
         options={{
-          headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => (
-            <AntDesign
-              name="plus"
-              size={24}
-              color="#ffffff"
-              style={styles.icon}
-            />
-          ),
+          headerTitle: "Коментарі",
         }}
+        name="Comments"
+        component={CommentsScreen}
       />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+      <NestedScreen.Screen
         options={{
-          headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => (
-            <FontAwesome name="user-o" size={24} color="rgba(33,33,33, 0.8)" />
-          ),
+          headerTitle: "Мапа",
         }}
+        name="MapScreen"
+        component={MapScreen}
       />
-    </Tab.Navigator>
+    </NestedScreen.Navigator>
   );
 };
 
 export default Home;
 
 const styles = StyleSheet.create({
-  icon: {
-    backgroundColor: "#FF6C00",
-    width: 70,
-    height: 40,
-    borderRadius: 20,
-    textAlign: "center",
-    paddingTop: 8,
-  },
+ 
 });
