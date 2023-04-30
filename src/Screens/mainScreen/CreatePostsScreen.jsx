@@ -17,7 +17,7 @@ import * as Location from "expo-location";
 import { storage, db } from "../../../firebase/config";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
-import PostsScreen from "./PostsScreen";
+import PostsScreen from "../nestedScreens/PostsScreen";
 
 const CreatePostsScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
@@ -31,7 +31,7 @@ const CreatePostsScreen = ({ navigation }) => {
     locationName: false,
   });
 
-   const { userId, login } = useSelector((state) => state.auth);
+  const { userId, login } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
@@ -90,7 +90,7 @@ const CreatePostsScreen = ({ navigation }) => {
 
     const createPost = await addDoc(collection(db, "posts"), post);
   };
-  
+
   const uploadPhoto = async () => {
     try {
       const response = await fetch(photo);
@@ -105,11 +105,11 @@ const CreatePostsScreen = ({ navigation }) => {
     } catch (error) {
       console.log("error", error.message);
     }
-  }
+  };
 
   const sendPost = () => {
     uploadPost();
-    navigation.navigate("Posts");
+    navigation.navigate("PostsScreen");
   };
 
   const takePhoto = async () => {
