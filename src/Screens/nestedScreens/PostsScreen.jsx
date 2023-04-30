@@ -30,22 +30,6 @@ const PostsScreen = ({navigation}) => {
     getAllPosts();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-      setLocation(coords);
-    })();
-  }, []);
-
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.logout}>
@@ -66,19 +50,21 @@ const PostsScreen = ({navigation}) => {
               <Text style={styles.description}>{item.title}</Text>
               <View style={styles.postDetails}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Comments")}
+                  onPress={() => navigation.navigate("Comments",{
+                    postId: item.id,
+                    photo: item.photo,
+                  })}
                 >
                   <EvilIcons name="comment" size={24} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.comments}>0</Text>
                 <TouchableOpacity
                   style={styles.location_button}
-                  onPress={() =>
-                    navigation.navigate("Map", {
-                      location: JSON.stringify(location),
-                      item,
+                  onPress={() => {
+                    navigation.navigate("MapScreen", {
+                      location: item.location,
                     })
-                  }
+                  }}
                 >
                   <EvilIcons name="location" size={24} color="black" />
                 </TouchableOpacity>
