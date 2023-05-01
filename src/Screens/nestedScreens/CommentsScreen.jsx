@@ -55,7 +55,7 @@ const CommentsScreen = ({ route }) => {
   const createComment = () => {
     uploadCommentToServer();
     if (!comment.trim()) {
-      Alert.alert("the comment cannot be empty ");
+      Alert.alert("the comment cannot be empty");
       return;
     }
     keyboardHide();
