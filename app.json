@@ -2,6 +2,7 @@
   "expo": {
     "name": "Awesome Posts App",
     "slug": "awesome-posts-app",
+    "description": "In this app you can post you photos and share it with other users.",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
